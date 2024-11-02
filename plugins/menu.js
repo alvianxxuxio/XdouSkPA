@@ -78,14 +78,41 @@ const user = global.db.data.users[m.sender]
     let mpt = clockString(_mpt);
     let name = m.pushName || conn.getName(m.sender);    
     let prn = thumb;
+    const events = {
+        "Idul Adha": new Date("2025-06-17"),
+        "Idul Fitri": new Date("2025-04-10"),
+        "Kemerdekaan Indonesia": new Date("2025-08-17"),
+        "Ramadhan": new Date("2025-03-11"),
+    };
+
+    let now = new Date();
+    let response = "Hitung Mundur Hari Besar:\n\n";
+    
+    for (let [event, date] of Object.entries(events)) {
+        let remainingTime = date - now;
+        if (remainingTime > 0) {
+            let days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+            response += `│⬡ *${event}*\n│ ${days} hari, ${hours} jam, ${minutes} menit\n`;
+        } else {
+            response += `│⬡ ${event} - Sudah lewat\n`;
+        }
+    }
     let fitur = Object.values(plugins)
       .filter((v) => v.help && !v.disabled)
       .map((v) => v.help)
-      .flat(1);
+      .flat(1);      
     let syaii = `${
       global.menu === "button"
         ? `🌟 Hi @${m.sender.split("@")[0]}
 ${namebot} Adalah sistem otomatis whatsApp yang dapat membantu anda dalam hal apapun di WhatsApp dengan menyajikan beberapa fitur seperti *AI*, *DOWNLOADER*, *GAME*, dan lainnya!!
+
+──────────────────
+${knn}「 HITUNG MUNDUR 」${knn}
+──────────────────
+${response}
+──────────────────
 
 ──────────────────
 ${knn}「 </> INFO-BOT </> 」${knn}
@@ -111,6 +138,12 @@ ${knn}「 </> INFO-USER </> 」${knn}
 *® PRESS BUTTON BELOW TO VIEW LIST OF FEATURES*`
         : `🌟 Hi @${m.sender.split("@")[0]}
 ${namebot} Adalah sistem otomatis whatsApp yang dapat membantu anda dalam hal apapun di WhatsApp dengan menyajikan beberapa fitur seperti *AI*, *DOWNLOADER*, *GAME*, dan lainnya!!
+
+──────────────────
+${knn}「 HITUNG MUNDUR 」${knn}
+──────────────────
+${response}
+──────────────────
 
 ──────────────────
 ${knn}「 </> INFO-BOT </> 」${knn}
@@ -417,7 +450,11 @@ renderLargerThumbnail: true }}},
         return `${helpItem}`;
       })
       .join("\n│  ⬡ " + " ");
-    let syaii = `╭  ${knn}MENU ${perintah.toUpperCase()}${knn}
+    let syaii = `──────────────────
+${knn}「 HITUNG MUNDUR 」${knn}
+──────────────────
+${response}
+──────────────────\n\n╭  ${knn}MENU ${perintah.toUpperCase()}${knn}
 │  ⬡ ${daftarHelp}
 ╰———
 `;
